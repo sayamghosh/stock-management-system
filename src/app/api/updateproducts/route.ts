@@ -7,13 +7,24 @@ connectDB();
 
 export async function POST(request: NextRequest) {
     try {
-        const reqBody = await request.json();
-        const { productId, price, quantity} = reqBody;
-        if (productId) {
-            const foundProduct = await Product.findOne({ productId });
-
+        const {productId,price,quantity}= await request.json();
+        console.log(productId);
+        if(!productId || (!price && !quantity)){
+            return NextResponse.json({error:"Please give valid productId and (price || quantity) "},{status:500});
         }
+        const updatedata:any={};
+        if(price){
+            updatedata.$set={price};
+        }
+        if(quantity){
+            updatedata.$inc={quantity};
+        }
+        if(Object.keys(updatedata).length === 0){
+            return NextResponse.json({error:"Please give valid price or quantity to update"},{status:500});
+        }
+        const updatedProduct = await Product.findOneAndUpdate({productId},updatedata,{ new: true, runValidators: true });
+        return NextResponse.json({message:"Product updated successfully",updatedProduct},{status:200});
     } catch (error:any) {
-        return NextResponse.json({error:error.message},{status:500});
+        return NextResponse.json({error:"Something happend while updating product"},{status:500});
     }
 }
