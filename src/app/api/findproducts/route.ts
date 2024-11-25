@@ -11,10 +11,12 @@ export async function POST(request:NextRequest){
         if(productId){
             const foundProduct = await Product.findOne({productId});
             if(foundProduct){
-                return NextResponse.json({message:"Product already exists",success:true,foundProduct});
+                return NextResponse.json({foundProduct});
             }else{
                 return NextResponse.json({message:"Product not found",success:false});
             }
+        }else{
+            return NextResponse.json({message:"Please provide a product Id"})
         }
         
     } catch (error:any) {

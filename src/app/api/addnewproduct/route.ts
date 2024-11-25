@@ -20,7 +20,7 @@ export async function POST(request:NextRequest){
                     quantity
                 })
                 const savedProduct = await newProduct.save();
-                return NextResponse.json({message:"Product created successfully",success:true,savedProduct});
+                return NextResponse.json({message:"Product added successfully",success:true,savedProduct});
             }    
         }else{
             return NextResponse.json({message:"Please provide a product id",success:false});
